@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Rust WASM Game</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="500" height="500"></canvas>
+  
+  <script type="module">
+    import init, { Game } from "./pkg/wasm_game.js";
+
+    async function main() {
+      await init();
+      const canvas = document.getElementById('gameCanvas');
+      const game = new Game(canvas);
+
+      // Initial render
+      game.update();
+
+      // Animation loop
+      function render() {
+        game.update();
+        requestAnimationFrame(render);
+      }
+      requestAnimationFrame(render);
+
+      // Keyboard controls
+      window.addEventListener('keydown', (event) => {
+        game.move_square(event.key);
+      });
+    }
+
+    main();
+  </script>
+</body>
+</html>
